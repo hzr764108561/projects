@@ -9,6 +9,7 @@ import xyz.chengzi.aeroplanechess.model.ChessPiece;
 import xyz.chengzi.aeroplanechess.util.RandomUtil;
 import xyz.chengzi.aeroplanechess.view.ChessBoardComponent;
 import xyz.chengzi.aeroplanechess.view.ChessComponent;
+import xyz.chengzi.aeroplanechess.view.GameFrame;
 import xyz.chengzi.aeroplanechess.view.SquareComponent;
 
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ public class GameController implements InputListener, Listenable<GameStateListen
     private final ChessBoard model;
 
     private Integer rolledNumber;
+    private Integer rolledNumber1;
     private int currentPlayer;
 
     public GameController(ChessBoardComponent chessBoardComponent, ChessBoard chessBoard) {
@@ -45,6 +47,7 @@ public class GameController implements InputListener, Listenable<GameStateListen
     public void initializeGame() {
         model.placeInitialPieces();
         rolledNumber = null;
+        rolledNumber1=null;
         currentPlayer = 0;
         listenerList.forEach(listener -> listener.onPlayerStartRound(currentPlayer));
     }
@@ -56,10 +59,19 @@ public class GameController implements InputListener, Listenable<GameStateListen
             return -1;
         }
     }
+    public int rollDice1() {
+        if (rolledNumber1 == null) {
+            return rolledNumber1 = RandomUtil.nextInt(1, 6);
+        } else {
+            return -1;
+        }
+    }
 
     public int nextPlayer() {
         rolledNumber = null;
-        return currentPlayer = (currentPlayer + 1) % 4;
+        rolledNumber1=null;
+        currentPlayer = (currentPlayer + 1) % 4;
+        return currentPlayer;
     }
 
 
@@ -73,7 +85,7 @@ public class GameController implements InputListener, Listenable<GameStateListen
         if (rolledNumber != null) {
             ChessPiece piece = model.getChessPieceAt(location);
             if (piece.getPlayer() == currentPlayer) {
-                model.moveChessPiece(location, rolledNumber);
+                model.moveChessPiece(location, rolledNumber,currentPlayer);
                 listenerList.forEach(listener -> listener.onPlayerEndRound(currentPlayer));
                 nextPlayer();
                 listenerList.forEach(listener -> listener.onPlayerStartRound(currentPlayer));
