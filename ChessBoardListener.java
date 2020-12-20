@@ -10,4 +10,5 @@ public interface ChessBoardListener extends Listener {
     void onChessPieceRemove(ChessBoardLocation location);
 
     void onChessBoardReload(ChessBoard board);
+
 }
