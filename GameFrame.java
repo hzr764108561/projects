@@ -132,17 +132,8 @@ public class GameFrame extends JFrame implements GameStateListener {
             new View().view();//new一个View类并调用里面的view函数
             setVisible(false);//关闭穿进来的那个类的视图
         });
-        button8.addActionListener((e) -> {//关闭穿进来的那个类的视图
-            Play0 play1 = new Play0("fxq.mp3"); //开启
-            play1.stop();
-            new Play0("zg1.mp3").start();//关闭穿进来的那个类的视图
-        });
-        button9.addActionListener((e) -> {//关闭穿进来的那个类的视图
-            Play0 play1 = new Play0("zg1.mp3");  //开启
-            play1.stop();
-            new Play0("zg2.mp3").start();
-        });
         button.addActionListener((e) -> {
+            new Play0("13019.mp3").start();
             int dice = controller.rollDice();
             int dice1 = controller.rollDice1();
             if (diceSelectorComponent.isRandomDice()) {
@@ -152,6 +143,7 @@ public class GameFrame extends JFrame implements GameStateListener {
                     button3.setVisible(true);
                     button4.setVisible(true);
                     if (dice == 6 || dice1 == 6) {
+                        new Play0("rolled_6_1.mp3").start();
                         button6.setVisible(true);
                     }
                     add.set(dice + dice1);
@@ -343,7 +335,9 @@ public class GameFrame extends JFrame implements GameStateListener {
                     }
                 }
 
-                else{button1.setVisible(true);
+                else{
+                    new Play0("rolled_6_1.mp3").start();
+                    button1.setVisible(true);
                 button2.setVisible(true);
                 button3.setVisible(true);
                 button4.setVisible(true);
