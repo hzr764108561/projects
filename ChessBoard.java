@@ -1,6 +1,7 @@
 package xyz.chengzi.aeroplanechess.model;
 
 import com.sun.javafx.iio.gif.GIFImageLoaderFactory;
+import xyz.chengzi.aeroplanechess.Play0;
 import xyz.chengzi.aeroplanechess.controller.GameController;
 import xyz.chengzi.aeroplanechess.listener.ChessBoardListener;
 import xyz.chengzi.aeroplanechess.listener.GameStateListener;
@@ -145,6 +146,7 @@ public class ChessBoard implements Listenable<ChessBoardListener>{
     public void moveChessPiece(ChessBoardLocation src, int steps,int currentPlayer) {
         ChessBoardLocation fly = new ChessBoardLocation(currentPlayer, 23);
         if (steps == 13) {
+            new Play0("plane_up_1.mp3").start();
             if (getGridAt(fly).getPiece()!=null){
                 int n,m;
                 n = getGridAt(src).getPiece().getChessNumber();
@@ -207,6 +209,7 @@ public class ChessBoard implements Listenable<ChessBoardListener>{
             }
             if (dest.getColor() == currentPlayer && dest.getIndex() < 12) {
                 if (dest.getColor() == currentPlayer && dest.getIndex() == 4) {
+                    new Play0("fly_across_1.mp3").start();
                     dest=new ChessBoardLocation(dest.getColor(),7);
                     ChessBoardLocation path = new ChessBoardLocation((dest.getColor()+2)%4,15);
                     if (getChessPieceAt(path)!=null){
@@ -221,7 +224,7 @@ public class ChessBoard implements Listenable<ChessBoardListener>{
                 else dest = new ChessBoardLocation(dest.getColor(), dest.getIndex() + 1);
             }
             if (dest.getColor() == currentPlayer && dest.getIndex() == 4) {
-
+                new Play0("fly_across_1.mp3").start();
                 dest=new ChessBoardLocation(dest.getColor(),7);
             }
             setChessPieceAt(dest, removeChessPieceAt(src));
@@ -232,6 +235,7 @@ public class ChessBoard implements Listenable<ChessBoardListener>{
                     grid[currentPlayer][home(currentPlayer).getIndex()].setPiece(new ChessPiece(currentPlayer,0,0));
                     listenerList.forEach(listener -> listener.onChessBoardReload(this));}
                     removeChessPieceAt(dest);
+                    new Play0("win_fly_back_home_1.mp3").start();
                 }
                 if (home(currentPlayer)==null){
                     for (int i = 0; i < 4; i++) {
