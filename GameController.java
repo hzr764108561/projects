@@ -121,6 +121,7 @@ public class GameController implements InputListener, Listenable<GameStateListen
         return Location;
     }
     public void victory(int currentPlayer){
+        new Play0("win_cheer_1.mp3").start();
         listenerList.forEach(listener -> listener.onPlayerStartRound(14));
         for (int i = 0; i < 4; i++) {
             if (winner[i]==-1){
