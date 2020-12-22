@@ -24,11 +24,23 @@ public class ChessBoard implements Listenable<ChessBoardListener>{
     public int first=0;
     public int second=0;
     private ChessBoardLocation saveLocation;
+    private int[] winner;
 
+    public int getWinner(int i) {
+        return winner[i];
+    }
+    public void setWinner(int i,int winner){
+        this.winner[i]=winner;
+    }
+    public void restart(){
+        controller.setN(1);
+        controller.initializeGame();
+    }
     public ChessBoard(int dimension, int endDimension) {
         this.grid = new Square[4][dimension + endDimension+5];
         this.dimension = dimension;
         this.endDimension = endDimension;
+        winner= new int[]{-1, -1, -1, -1};
         initGrid();
     }
     private ChessBoardComponent chessBoardComponent=new ChessBoardComponent(761,13,6);
@@ -77,6 +89,30 @@ public class ChessBoard implements Listenable<ChessBoardListener>{
         grid[3][20].setPiece(new ChessPiece(3,0,1));
         grid[3][21].setPiece(new ChessPiece(3,0,1));
         grid[3][22].setPiece(new ChessPiece(3,0,1));
+        listenerList.forEach(listener -> listener.onChessBoardReload(this));
+    }
+    public void loadprocessedGrid(int[][] process){
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < dimension + endDimension + 5; j++) {
+                grid[i][j].setPiece(null);
+            }
+        }
+        grid[0][process[0][0]].setPiece(new ChessPiece(0,1,1));
+        grid[0][process[0][1]].setPiece(new ChessPiece(0,1,1));
+        grid[0][process[0][2]].setPiece(new ChessPiece(0,2,1));
+        grid[0][process[0][3]].setPiece(new ChessPiece(0,3,1));
+        grid[1][process[1][0]].setPiece(new ChessPiece(1,0,1));
+        grid[1][process[1][1]].setPiece(new ChessPiece(1,1,1));
+        grid[1][process[1][2]].setPiece(new ChessPiece(1,1,1));
+        grid[1][process[1][3]].setPiece(new ChessPiece(1,1,1));
+        grid[2][process[2][0]].setPiece(new ChessPiece(2,0,1));
+        grid[2][process[2][1]].setPiece(new ChessPiece(2,1,1));
+        grid[2][process[2][2]].setPiece(new ChessPiece(2,1,1));
+        grid[2][process[2][3]].setPiece(new ChessPiece(2,1,1));
+        grid[3][process[3][0]].setPiece(new ChessPiece(3,0,1));
+        grid[3][process[3][1]].setPiece(new ChessPiece(3,0,1));
+        grid[3][process[3][2]].setPiece(new ChessPiece(3,0,1));
+        grid[3][process[3][3]].setPiece(new ChessPiece(3,0,1));
         listenerList.forEach(listener -> listener.onChessBoardReload(this));
     }
     public Square getGridAt(ChessBoardLocation location) {
@@ -162,12 +198,6 @@ public class ChessBoard implements Listenable<ChessBoardListener>{
                 }
                 dest1 = nextLocation(dest1, currentPlayer);
                 dest = nextLocation(dest, currentPlayer);
-                if (getGridAt(nextLocation(dest1, currentPlayer)).getPiece() != null && getGridAt(src).getPiece().getChessNumber() < getGridAt(nextLocation(dest1, currentPlayer)).getPiece().getChessNumber()) {
-                    for (int j = 0; j < steps - i - 1; j++) {
-                        dest = back(dest, currentPlayer);
-                    }
-                    break;
-                }
                 if (dest.getIndex() == 18) {
                     for (int j = 0; j < steps - i - 1; j++) {
                         dest = back(dest, currentPlayer);
@@ -176,15 +206,39 @@ public class ChessBoard implements Listenable<ChessBoardListener>{
                 }
             }
             if (dest.getColor() == currentPlayer && dest.getIndex() < 12) {
-                dest = new ChessBoardLocation(dest.getColor(), dest.getIndex() + 1);
+                if (dest.getColor() == currentPlayer && dest.getIndex() == 4) {
+                    dest=new ChessBoardLocation(dest.getColor(),7);
+                    ChessBoardLocation path = new ChessBoardLocation((dest.getColor()+2)%4,15);
+                    if (getChessPieceAt(path)!=null){
+                        for (int i = 0; i < getChessPieceAt(path).getChessNumber(); i++) {
+                            if (getChessPieceAt(path).getChessNumber()==1){
+                                setChessPieceAt(region(path),getChessPieceAt(path));
+                            }
+                            else grid[region(path).getColor()][region(path).getIndex()].setPiece(new ChessPiece(region(path).getColor(), region(path).getIndex(), 1));
+                        }
+                    }
+                }
+                else dest = new ChessBoardLocation(dest.getColor(), dest.getIndex() + 1);
+            }
+            if (dest.getColor() == currentPlayer && dest.getIndex() == 4) {
+
+                dest=new ChessBoardLocation(dest.getColor(),7);
             }
             setChessPieceAt(dest, removeChessPieceAt(src));
             saveLocation=dest;
             if (dest.getIndex()==18){
                 if (home(currentPlayer)!=null){
-                    grid[currentPlayer][home(currentPlayer).getIndex()].setPiece(new ChessPiece(4,0,1));
-                    listenerList.forEach(listener -> listener.onChessBoardReload(this));
+                    for (int i = 0; i < getChessPieceAt(dest).getChessNumber(); i++) {
+                    grid[currentPlayer][home(currentPlayer).getIndex()].setPiece(new ChessPiece(currentPlayer,0,0));
+                    listenerList.forEach(listener -> listener.onChessBoardReload(this));}
                     removeChessPieceAt(dest);
+                }
+                if (home(currentPlayer)==null){
+                    for (int i = 0; i < 4; i++) {
+                        ChessBoardLocation finish = new ChessBoardLocation(currentPlayer,i+19);
+                        if (getChessPieceAt(finish).getChessNumber()==0&&i+19==22)controller.victory(currentPlayer);
+                        if (getChessPieceAt(finish).getChessNumber()!=0)break;
+                    }
                 }
             }
         }
@@ -250,21 +304,33 @@ public class ChessBoard implements Listenable<ChessBoardListener>{
     }
     public void backToHome(ChessBoardLocation location,ChessBoardLocation location1) {
         if (getGridAt(location).getPiece() != null) {
-            for (int i = 0; i < getGridAt(location).getPiece().getChessNumber(); i++) {
-                if (getGridAt(location).getPiece().getChessNumber() > 1) {
-                    setChessPieceAt(region(location), getGridAt(location).getPiece());
-                } else {
-                    setChessPieceAt(region(location), removeChessPieceAt(location));
-                    break;
+            int n;
+            n= getGridAt(location).getPiece().getChessNumber();
+                for (int i = 0; i < getGridAt(location).getPiece().getChessNumber(); i++) {
+                    if (n>1) {
+                        grid[region(location).getColor()][region(location).getIndex()].setPiece(new ChessPiece(region(location1).getColor(),1,1));
+                        listenerList.forEach(listener -> listener.onChessBoardReload(this));
+                        n--;
+                    }
+                    else {
+                        grid[region(location).getColor()][region(location).getIndex()].setPiece(new ChessPiece(region(location1).getColor(),1,1));
+                        listenerList.forEach(listener -> listener.onChessBoardReload(this));
+                        removeChessPieceAt(location);
+                        break;}
                 }
-            }
         }
         if (getGridAt(location1).getPiece() != null) {
+            int n;
+            n= getGridAt(location1).getPiece().getChessNumber();
             for (int i = 0; i < getGridAt(location1).getPiece().getChessNumber(); i++) {
-            if (getGridAt(location1).getPiece().getChessNumber()>1) {
-                    setChessPieceAt(region(location1), getGridAt(location1).getPiece());
+            if (n>1) {
+                grid[region(location1).getColor()][region(location1).getIndex()].setPiece(new ChessPiece(region(location1).getColor(),1,1));
+                listenerList.forEach(listener -> listener.onChessBoardReload(this));
+                n--;
                 }
-            else {setChessPieceAt(region(location1), removeChessPieceAt(location1));
+            else {grid[region(location1).getColor()][region(location1).getIndex()].setPiece(new ChessPiece(region(location1).getColor(),1,1));
+                listenerList.forEach(listener -> listener.onChessBoardReload(this));
+                removeChessPieceAt(location1);
             break;}
         }
         }

@@ -16,7 +16,7 @@ import java.util.List;
 public class ChessBoardComponent extends JComponent implements Listenable<InputListener>, ChessBoardListener {
     private static final Color[] BOARD_COLORS = {Color.YELLOW, Color.BLUE, Color.GREEN, Color.RED,Color.pink};
     private static final Color[] PIECE_COLORS = {Color.YELLOW.darker(), Color.BLUE.darker(),
-            Color.GREEN.darker(), Color.RED.darker(),Color.PINK.darker()};
+            Color.GREEN.darker(), Color.RED.darker(),Color.darkGray};
 
     private final List<InputListener> listenerList = new ArrayList<>();
     private final SquareComponent[][] gridComponents;
@@ -45,7 +45,7 @@ public class ChessBoardComponent extends JComponent implements Listenable<InputL
             y = 0;
         } else if (boardIndex >= 4 && boardIndex <= 6) {
             x = gridSize * 4;
-            y = (boardIndex - 3) * gridSize;
+            y = (7 - boardIndex) * gridSize;
         } else if (boardIndex < 4 && boardIndex >= 0 && boardIndex1 < 50 && boardIndex1 != 1) {
             x = (boardIndex ) * gridSize;
             y = 5 * gridSize;

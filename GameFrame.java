@@ -132,16 +132,12 @@ public class GameFrame extends JFrame implements GameStateListener {
             new View().view();//new一个View类并调用里面的view函数
             setVisible(false);//关闭穿进来的那个类的视图
         });
-        button8.addActionListener((e) -> {
-            Play0 play0 = new Play0("fxq.mp3"); //开启
-            play0.stop();//关闭穿进来的那个类的视图
-            Play0 play1 = new Play0("zg2.mp3"); //开启
+        button8.addActionListener((e) -> {//关闭穿进来的那个类的视图
+            Play0 play1 = new Play0("fxq.mp3"); //开启
             play1.stop();
             new Play0("zg1.mp3").start();//关闭穿进来的那个类的视图
         });
-        button9.addActionListener((e) -> {
-            Play0 play0 = new Play0("fxq.mp3"); //开启
-            play0.stop();//关闭穿进来的那个类的视图
+        button9.addActionListener((e) -> {//关闭穿进来的那个类的视图
             Play0 play1 = new Play0("zg1.mp3");  //开启
             play1.stop();
             new Play0("zg2.mp3").start();
@@ -274,6 +270,7 @@ public class GameFrame extends JFrame implements GameStateListener {
                 JOptionPane.showMessageDialog(this, "You selected " + diceSelectorComponent.getSelectedDice() + "and" + diceSelectorComponent.getSelectedDice2());
                 int g = Integer.parseInt(diceSelectorComponent.getSelectedDice().toString());
                 int h = Integer.parseInt(diceSelectorComponent.getSelectedDice2().toString());
+                statusLabel.setText(String.format("[%s] Rolled a %d and a %d", PLAYER_NAMES[controller.getCurrentPlayer()],g,h));
                 if (g != 6 && h != 6) {
                     if (chessBoard.home(controller.getCurrentPlayer()) == null) {
                         JOptionPane.showMessageDialog(this, "You have no chess to move");
@@ -444,6 +441,11 @@ public class GameFrame extends JFrame implements GameStateListener {
         }
         if (player==12) JOptionPane.showMessageDialog(this, "You can't move this chess");
         if (player==13) JOptionPane.showMessageDialog(this, "You should choice a chess at home");
+        if (player==14)JOptionPane.showMessageDialog(this, "You are victory");
+        if (player==15){
+            JOptionPane.showMessageDialog(this, "the first"+PLAYER_NAMES[chessBoard.getWinner(0)]+"\nthe second"+PLAYER_NAMES[chessBoard.getWinner(1)]+"\nthe third"+PLAYER_NAMES[chessBoard.getWinner(2)]+"\nthe forth"+PLAYER_NAMES[chessBoard.getWinner(3)]);
+            JOptionPane.showMessageDialog(this, "The game will restart");
+        }
     }
 
     @Override

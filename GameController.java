@@ -1,5 +1,6 @@
 package xyz.chengzi.aeroplanechess.controller;
 
+import xyz.chengzi.aeroplanechess.Play0;
 import xyz.chengzi.aeroplanechess.listener.GameStateListener;
 import xyz.chengzi.aeroplanechess.listener.InputListener;
 import xyz.chengzi.aeroplanechess.listener.Listenable;
@@ -9,10 +10,8 @@ import xyz.chengzi.aeroplanechess.model.ChessPiece;
 import xyz.chengzi.aeroplanechess.util.RandomUtil;
 import xyz.chengzi.aeroplanechess.view.ChessBoardComponent;
 import xyz.chengzi.aeroplanechess.view.ChessComponent;
-import xyz.chengzi.aeroplanechess.view.GameFrame;
 import xyz.chengzi.aeroplanechess.view.SquareComponent;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +27,7 @@ public class GameController implements InputListener, Listenable<GameStateListen
     private ChessBoardLocation Location;
     private ChessBoardLocation chessBoardLocation1;
     private ChessBoardLocation chessBoardLocation2;
+    private int[] winner;
 
 
     public GameController(ChessBoardComponent chessBoardComponent, ChessBoard chessBoard) {
@@ -35,6 +35,10 @@ public class GameController implements InputListener, Listenable<GameStateListen
         this.model = chessBoard;
         view.registerListener(this);
         model.registerListener(view);
+        winner=new int[4];
+        for (int i = 0; i < winner.length; i++) {
+            winner[i]=-1;
+        }
     }
     public void setN(int n){
        this.n=n;
@@ -59,15 +63,14 @@ public class GameController implements InputListener, Listenable<GameStateListen
         return currentPlayer;
     }
 
-    public void setCurrentPlayer(int currentPlayer) {
-        this.currentPlayer = currentPlayer;
-    }
-
     public void initializeGame() {
         model.placeInitialPieces();
         rolledNumber = null;
         rolledNumber1=null;
         currentPlayer = 0;
+        for (int i = 0; i < 4; i++) {
+            winner[i]=-1;
+        }
         listenerList.forEach(listener -> listener.onPlayerStartRound(currentPlayer));
     }
 
@@ -99,6 +102,12 @@ public class GameController implements InputListener, Listenable<GameStateListen
         rolledNumber = null;
         rolledNumber1=null;
         currentPlayer = (currentPlayer + 1) % 4;
+        for (int i = 0; i < 4; i++) {
+            if (currentPlayer==model.getWinner(i)){
+                currentPlayer=(currentPlayer + 1) % 4;
+                i=0;
+            }
+        }
         return currentPlayer;
     }
     @Override
@@ -110,6 +119,19 @@ public class GameController implements InputListener, Listenable<GameStateListen
     }
     public ChessBoardLocation getLocation(){
         return Location;
+    }
+    public void victory(int currentPlayer){
+        listenerList.forEach(listener -> listener.onPlayerStartRound(14));
+        for (int i = 0; i < 4; i++) {
+            if (winner[i]==-1){
+                winner[i]=currentPlayer;
+                model.setWinner(i,winner[i]);
+                if (i==3){
+                    listenerList.forEach(listener -> listener.onPlayerStartRound(15));
+                }
+                break;
+            }
+        }
     }
     @Override
     public void onPlayerClickChessPiece(ChessBoardLocation location, ChessComponent component) {
@@ -123,6 +145,7 @@ public class GameController implements InputListener, Listenable<GameStateListen
                         }
                         if (rolledNumber1 != null && n == 3) {
                             model.backToHome(chessBoardLocation1, chessBoardLocation2);
+                            n=1;
                             nextPlayer();
                             listenerList.forEach(listener -> listener.onPlayerStartRound(currentPlayer));
                         }
@@ -155,6 +178,7 @@ public class GameController implements InputListener, Listenable<GameStateListen
                             if (!model.chessAtHome(location, currentPlayer)) {
                                 if (rolledNumber1 != null && n == 3) {
                                     model.backToHome(chessBoardLocation1, chessBoardLocation2);
+                                    n=1;
                                     nextPlayer();
                                     listenerList.forEach(listener -> listener.onPlayerStartRound(currentPlayer));
                                 }
