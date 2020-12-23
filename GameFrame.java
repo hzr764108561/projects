@@ -132,8 +132,21 @@ public class GameFrame extends JFrame implements GameStateListener {
             new View().view();//new一个View类并调用里面的view函数
             setVisible(false);//关闭穿进来的那个类的视图
         });
+        button8.addActionListener((e) -> {
+            Play0 play0 = new Play0("fxq.mp3"); //开启
+            play0.stop();//关闭穿进来的那个类的视图
+            Play0 play1 = new Play0("zg2.mp3"); //开启
+            play1.stop();
+            new Play0("zg1.mp3").start();//关闭穿进来的那个类的视图
+        });
+        button9.addActionListener((e) -> {
+            Play0 play0 = new Play0("fxq.mp3"); //开启
+            play0.stop();//关闭穿进来的那个类的视图
+            Play0 play1 = new Play0("zg1.mp3");  //开启
+            play1.stop();
+            new Play0("zg2.mp3").start();
+        });
         button.addActionListener((e) -> {
-            new Play0("13019.mp3").start();
             int dice = controller.rollDice();
             int dice1 = controller.rollDice1();
             if (diceSelectorComponent.isRandomDice()) {
@@ -143,7 +156,6 @@ public class GameFrame extends JFrame implements GameStateListener {
                     button3.setVisible(true);
                     button4.setVisible(true);
                     if (dice == 6 || dice1 == 6) {
-                        new Play0("rolled_6_1.mp3").start();
                         button6.setVisible(true);
                     }
                     add.set(dice + dice1);
@@ -262,7 +274,6 @@ public class GameFrame extends JFrame implements GameStateListener {
                 JOptionPane.showMessageDialog(this, "You selected " + diceSelectorComponent.getSelectedDice() + "and" + diceSelectorComponent.getSelectedDice2());
                 int g = Integer.parseInt(diceSelectorComponent.getSelectedDice().toString());
                 int h = Integer.parseInt(diceSelectorComponent.getSelectedDice2().toString());
-                statusLabel.setText(String.format("[%s] Rolled a %d and a %d", PLAYER_NAMES[controller.getCurrentPlayer()],g,h));
                 if (g != 6 && h != 6) {
                     if (chessBoard.home(controller.getCurrentPlayer()) == null) {
                         JOptionPane.showMessageDialog(this, "You have no chess to move");
@@ -291,17 +302,17 @@ public class GameFrame extends JFrame implements GameStateListener {
                         }
                         button1.addActionListener((a) -> {
                             statusLabel1.setText(String.format("you choose %d steps,", add.get()));
-                            statusLabel2.setText(String.format("please choose a chess to move"));
+                            statusLabel2.setText("please choose a chess to move");
                             controller.setSteps(add.get());
                         });
                         button2.addActionListener((b) -> {
                             if (subtract.get() == 0) {
-                                statusLabel1.setText(String.format("it's 0."));
-                                statusLabel2.setText(String.format("please choose another button"));
+                                statusLabel1.setText("it's 0.");
+                                statusLabel2.setText("please choose another button");
                             }
                             if (subtract.get() != 0) {
                                 statusLabel1.setText(String.format("you choose to move %d steps,", subtract.get()));
-                                statusLabel2.setText(String.format("please choose a chess to move"));
+                                statusLabel2.setText("please choose a chess to move");
                                 controller.setSteps(subtract.get());
                             }
                         });
@@ -310,34 +321,32 @@ public class GameFrame extends JFrame implements GameStateListener {
                                 statusLabel1.setText(String.format("you choose to move %d steps,", multiply.get()));
                                 controller.setSteps(multiply.get());
                             } else {
-                                statusLabel1.setText(String.format("you choose to move 12 steps,"));
+                                statusLabel1.setText("you choose to move 12 steps,");
                                 controller.setSteps(12);
                             }
-                            statusLabel2.setText(String.format("please choose a chess to move"));
+                            statusLabel2.setText("please choose a chess to move");
                         });
                         button4.addActionListener((d) -> {
                             if (yushu.get() == 0) {
                                 statusLabel1.setText(String.format("you choose to move %d steps,", divide.get()));
-                                statusLabel2.setText(String.format("please choose a chess to move"));
+                                statusLabel2.setText("please choose a chess to move");
                                 controller.setSteps(divide.get());
                             }
                             if (ys2.get() == 0) {
                                 statusLabel1.setText(String.format("you choose to move %d steps,", divide.get()));
-                                statusLabel2.setText(String.format("please choose a chess to move"));
+                                statusLabel2.setText("please choose a chess to move");
                                 controller.setSteps(divide.get());
                             }
                             if (yushu.get() != 0 && ys2.get() != 0) {
-                                statusLabel1.setText(String.format("you can't move like this"));
-                                statusLabel2.setText(String.format("please choose another button"));
+                                statusLabel1.setText("you can't move like this");
+                                statusLabel2.setText("please choose another button");
                             }
 
                         });
                     }
                 }
 
-                else{
-                    new Play0("rolled_6_1.mp3").start();
-                    button1.setVisible(true);
+                else{button1.setVisible(true);
                 button2.setVisible(true);
                 button3.setVisible(true);
                 button4.setVisible(true);
@@ -358,17 +367,17 @@ public class GameFrame extends JFrame implements GameStateListener {
                 }
                 button1.addActionListener((a) -> {
                     statusLabel1.setText(String.format("you choose %d steps,", add.get()));
-                    statusLabel2.setText(String.format("please choose a chess to move"));
+                    statusLabel2.setText("please choose a chess to move");
                     controller.setSteps(add.get());
                 });
                 button2.addActionListener((b) -> {
                     if (subtract.get() == 0) {
-                        statusLabel1.setText(String.format("it's 0."));
-                        statusLabel2.setText(String.format("please choose another button"));
+                        statusLabel1.setText("it's 0.");
+                        statusLabel2.setText("please choose another button");
                     }
                     if (subtract.get() != 0) {
                         statusLabel1.setText(String.format("you choose to move %d steps,", subtract.get()));
-                        statusLabel2.setText(String.format("please choose a chess to move"));
+                        statusLabel2.setText("please choose a chess to move");
                         controller.setSteps(subtract.get());
                     }
                 });
@@ -377,25 +386,25 @@ public class GameFrame extends JFrame implements GameStateListener {
                         statusLabel1.setText(String.format("you choose to move %d steps,", multiply.get()));
                         controller.setSteps(multiply.get());
                     } else {
-                        statusLabel1.setText(String.format("you choose to move 12 steps,"));
+                        statusLabel1.setText("you choose to move 12 steps,");
                         controller.setSteps(12);
                     }
-                    statusLabel2.setText(String.format("please choose a chess to move"));
+                    statusLabel2.setText("please choose a chess to move");
                 });
                 button4.addActionListener((d) -> {
                     if (yushu.get() == 0) {
                         statusLabel1.setText(String.format("you choose to move %d steps,", divide.get()));
-                        statusLabel2.setText(String.format("please choose a chess to move"));
+                        statusLabel2.setText("please choose a chess to move");
                         controller.setSteps(divide.get());
                     }
                     if (ys2.get() == 0) {
                         statusLabel1.setText(String.format("you choose to move %d steps,", divide.get()));
-                        statusLabel2.setText(String.format("please choose a chess to move"));
+                        statusLabel2.setText("please choose a chess to move");
                         controller.setSteps(divide.get());
                     }
                     if (yushu.get() != 0 && ys2.get() != 0) {
-                        statusLabel1.setText(String.format("you can't move like this"));
-                        statusLabel2.setText(String.format("please choose another button"));
+                        statusLabel1.setText("you can't move like this");
+                        statusLabel2.setText("please choose another button");
                     }
 
                 });
@@ -435,11 +444,6 @@ public class GameFrame extends JFrame implements GameStateListener {
         }
         if (player==12) JOptionPane.showMessageDialog(this, "You can't move this chess");
         if (player==13) JOptionPane.showMessageDialog(this, "You should choice a chess at home");
-        if (player==14)JOptionPane.showMessageDialog(this, "You are victory");
-        if (player==15){
-            JOptionPane.showMessageDialog(this, "the first"+PLAYER_NAMES[chessBoard.getWinner(0)]+"\nthe second"+PLAYER_NAMES[chessBoard.getWinner(1)]+"\nthe third"+PLAYER_NAMES[chessBoard.getWinner(2)]+"\nthe forth"+PLAYER_NAMES[chessBoard.getWinner(3)]);
-            JOptionPane.showMessageDialog(this, "The game will restart");
-        }
     }
 
     @Override

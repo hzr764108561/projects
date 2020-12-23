@@ -15,9 +15,9 @@ public class ViewAction implements java.awt.event.ActionListener {
         Object object=event.getSource();//创建事件源对象
         switch(event.getActionCommand()){
             //如果按下视图1
-            case "home":
+            case "load game":
                 //这里之所以先创建新视图再关闭旧视图是因为反过来的话我们会发现延迟看上去会有一些难受
-                new View().view();//new一个View类并调用里面的view函数
+                new View().view3(1);//new一个View类并调用里面的view函数
                 v.setVisible(false);//关闭穿进来的那个类的视图
                 break;
             //如果按下视图2

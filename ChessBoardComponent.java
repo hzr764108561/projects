@@ -15,8 +15,13 @@ import java.util.List;
 
 public class ChessBoardComponent extends JComponent implements Listenable<InputListener>, ChessBoardListener {
     private static final Color[] BOARD_COLORS = {Color.YELLOW, Color.BLUE, Color.GREEN, Color.RED,Color.pink};
-    private static final Color[] PIECE_COLORS = {Color.YELLOW.darker(), Color.BLUE.darker(),
-            Color.GREEN.darker(), Color.RED.darker(),Color.darkGray};
+    private static final Color[][] PIECE_COLORS = {
+            {Color.BLACK,Color.YELLOW,Color.YELLOW.darker(),Color.YELLOW.darker().darker(),Color.YELLOW.darker().darker().darker()},
+            {Color.BLACK,Color.BLUE.brighter().brighter(),Color.BLUE.brighter(),Color.BLUE},
+            {Color.BLACK,Color.GREEN.brighter().brighter(),Color.GREEN.brighter(),Color.GREEN},
+            {Color.BLACK,Color.RED.brighter().brighter(),Color.RED.brighter(),Color.RED},
+            {Color.BLACK}
+    };
 
     private final List<InputListener> listenerList = new ArrayList<>();
     private final SquareComponent[][] gridComponents;
@@ -25,7 +30,7 @@ public class ChessBoardComponent extends JComponent implements Listenable<InputL
 
     public ChessBoardComponent(int size, int dimension, int endDimension) {
         enableEvents(AWTEvent.MOUSE_EVENT_MASK);
-        setLayout(null); // Use absolute layout
+        setLayout(null);
         setSize(size, size);
         setLocation(0,30);
 
@@ -186,7 +191,7 @@ public class ChessBoardComponent extends JComponent implements Listenable<InputL
 
     @Override
     public void onChessPiecePlace(ChessBoardLocation location, ChessPiece piece) {
-        setChessAtGrid(location, PIECE_COLORS[piece.getPlayer()]);
+        setChessAtGrid(location, PIECE_COLORS[piece.getPlayer()][piece.getChessNumber()]);
         repaint();
     }
 
@@ -203,7 +208,7 @@ public class ChessBoardComponent extends JComponent implements Listenable<InputL
                 ChessBoardLocation location = new ChessBoardLocation(color, index);
                 ChessPiece piece = board.getChessPieceAt(location);
                 if (piece != null) {
-                    setChessAtGrid(location, PIECE_COLORS[piece.getPlayer()]);
+                    setChessAtGrid(location, PIECE_COLORS[piece.getPlayer()][piece.getChessNumber()]);
                 } else {
                     removeChessAtGrid(location);
                 }
