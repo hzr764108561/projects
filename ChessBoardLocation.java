@@ -1,7 +1,7 @@
 package xyz.chengzi.aeroplanechess.model;
 
 import java.util.Objects;
-
+//
 public class ChessBoardLocation {
     private final int color;
     private final int index;
