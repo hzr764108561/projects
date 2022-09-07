@@ -6,7 +6,7 @@ import xyz.chengzi.aeroplanechess.view.ChessBoardComponent;
 import xyz.chengzi.aeroplanechess.view.GameFrame;
 
 import javax.swing.*;
-
+//
 public class AeroplaneChess {
     public static void main(String[] args) {
         System.setProperty("sun.java2d.win.uiScaleX", "96dpi");
